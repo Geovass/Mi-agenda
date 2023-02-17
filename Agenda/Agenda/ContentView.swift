@@ -2,7 +2,7 @@
 //  ContentView.swift
 //  Agenda
 //
-//  Created by alumno on 16/02/23.
+//  Created by Geovanni Romero on 16/02/23.
 //
 
 import SwiftUI
@@ -13,12 +13,19 @@ struct Contact: Hashable{
     let imageName: String
     let movil: String
     let fechaNacimiento: Date
-    //fechaNacimiento.formatted(.dateTime.day().month().year())
     let email: String
     let color: Color
 }
 
 struct ContentView: View {
+    
+    @State var newName = ""
+    @State var newLastName = ""
+    @State var newFechaNacimiento = Date.now
+    @State var newChooseColor = Color.purple
+    @State var newEmail = ""
+    @State var newFirstMovil = ""
+    @State var newSecondMovil = ""
     
     var contacts: [Contact] = [
         .init(name: "Milner", lastName: "Flores", imageName: "person.circle.fill", movil: "5510506314", fechaNacimiento: Date.now, email: "milner_ushuaia@gmail.com", color: .cyan),
@@ -29,6 +36,44 @@ struct ContentView: View {
     
     var body: some View {
         NavigationStack(path: $path){
+            Label{
+            }icon: {
+                NavigationLink{
+                    List{
+                        Section("Datos"){
+                            TextField("Nombre", text: $newName)
+                                .textFieldStyle(.roundedBorder)
+                            TextField("Apellido", text: $newLastName)
+                                .textFieldStyle(.roundedBorder)
+                            DatePicker("Fecha de nacimiento", selection: $newFechaNacimiento, displayedComponents: .date)
+                            ColorPicker("Elige un color", selection: $newChooseColor, supportsOpacity: true)
+                                .textFieldStyle(.roundedBorder)
+                        }
+                        Section("Contacto"){
+                            TextField("Email", text: $newEmail)
+                                .textFieldStyle(.roundedBorder)
+                                .keyboardType(.emailAddress)
+                            TextField("Movil 1", text: $newFirstMovil)
+                                .textFieldStyle(.roundedBorder)
+                                .keyboardType(.numberPad)
+                            TextField("Movil 2", text: $newSecondMovil)
+                                .textFieldStyle(.roundedBorder)
+                                .keyboardType(.numberPad)
+                        }
+                    }.padding(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+                    
+                    
+                }label: {
+                    Label{
+                    }icon: {
+                        Image(systemName: "person.badge.plus")
+                            .foregroundColor(.brown)
+                    }
+                        }
+                Image(systemName: "magnifyingglass")
+                Image(systemName: "slider.vertical.3")
+            }.padding(.init(top: 0, leading: 280, bottom: 0, trailing: 10))
+            
             List {
                 Section("Mas antiguos") {
                     ForEach(contacts, id: \.name ) { contact in
@@ -45,7 +90,7 @@ struct ContentView: View {
             
             .navigationTitle("Mis contactos")
             .navigationDestination(for: Contact.self){ cont in
-                    VStack{
+                VStack{
                         Label{
                         }icon:{
                             Image(systemName: "\(cont.imageName)")
@@ -87,13 +132,28 @@ struct ContentView: View {
                                 .frame(width: 25, height: 25)
                                 .padding(.init(top: 10, leading: 0, bottom: 0, trailing: 10))
                                 .foregroundColor(cont.color)
-                                
                         }
-                }.padding(.init(top: 50, leading: 0, bottom: 600, trailing: 10))
+                }
+                    Form{
+                        Label{
+                            Text("\(cont.fechaNacimiento.formatted(.dateTime.day().month().year()))")
+                        }icon:{
+                            Image(systemName: "birthday.cake.fill")
+                                .foregroundColor(cont.color)
+                        }
+                        
+                        Label{
+                            Text("\(cont.email)")
+                        }icon:{
+                            Image(systemName: "envelope.fill")
+                                .foregroundColor(cont.color)
+                        }
+                    }
+                }
             }
         }
+        
     }
-}
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
